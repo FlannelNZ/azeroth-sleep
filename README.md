@@ -48,7 +48,7 @@ To test:
 1. Check that you can login as a player.
 2. Logout
 3. Check cpu usage
-4. Wait 5 mins (or whatever you have set the idle time to in the aseroth-monitor script)
+4. Wait 5 mins (or whatever you have set the idle time to in the azeroth-monitor script)
 5. Check that the cpu usage is massively reduces (you can also check the authserver and worldserver processes which should be in a frozen state)
 6. Check that you can log back in again and the server processes are instantly thawed.
 
