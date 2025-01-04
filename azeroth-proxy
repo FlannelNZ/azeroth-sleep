@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Configuration
-LISTEN_PORT=3724
-TARGET_PORT=3725
-TARGET_IP="192.168.0.137"
-SCRIPT_PATH="/home/azeroth/azeroth-local"
+LISTEN_PORT=3724 # worldserver telnet console port
+TARGET_PORT=3725 # worldserver primary port
+TARGET_IP="192.168.0.137" # IP address that azerothcore is running on
+SCRIPT_PATH="/home/azeroth/azeroth-local" # path of the azeroth-thaw script
 
 # Function to log messages
 log_message() {
