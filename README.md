@@ -24,7 +24,7 @@ I have one issue to resolve - I have the playerbots mod installed and it seems t
 I have tested it with worldserver and authserver running under systemd, although it should work regardless - although this solution is under systemd, it assumes nothing about the two core services. If you do want to get them under systemd, I have included worldserver.service and authserver.service which are the ones I use (you would just need to adjust the paths)
 
 ```
-sudo apt install socat
+sudo apt install net-tools socat
 ```
 ## Installation and Configuration
 To get started, clone the repo - I put the scripts under /home/azeroth/azeroth-local.
