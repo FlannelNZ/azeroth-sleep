@@ -23,6 +23,10 @@ I have one issue to resolve - I have the playerbots mod installed and it seems t
 ## Prerequisites
 I have tested it with worldserver and authserver running under systemd, although it should work regardless - although this solution is under systemd, it assumes nothing about the two core services. If you do want to get them under systemd, I have included worldserver.service and authserver.service which are the ones I use (you would just need to adjust the paths)
 
+```
+sudo apt install socat
+```
+## Installation and Configuration
 To get started, clone the repo - I put the scripts under /home/azeroth/azeroth-local.
 
 You will need to modify something variables and oaths in the scripts since I haven't spent too much time with parameterising or env files (yet?). They should be self-explanatory:
@@ -39,6 +43,7 @@ systemctl enable azeroth-proxy
 systemctl start azeroth-monitor
 systemctl start azeroth-proxy
 ```
+## Testing
 To test:
 1. Check that you can login as a player.
 2. Logout
