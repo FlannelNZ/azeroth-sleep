@@ -1,0 +1,21 @@
+#!/bin/bash
+
+BIN_PATH="/home/azeroth/server/bin"
+
+# Get PIDs
+auth_pid=$(pgrep -f "${BIN_PATH}/authserver")
+world_pid=$(pgrep -f "${BIN_PATH}/worldserver")
+    
+# Thaw auth server if frozen
+if [ -n "$auth_pid" ] && ps -o state= -p "$auth_pid" | grep -q "T"; then
+    echo "Thaw 1"
+    kill -CONT "$auth_pid"
+fi
+    
+# Thaw world server if frozen
+if [ -n "$world_pid" ] && ps -o state= -p "$world_pid" | grep -q "T"; then
+    echo "Thaw 2"
+    kill -CONT "$world_pid"
+fi
+
+sleep 0.2

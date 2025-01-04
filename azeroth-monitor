@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Configuration
+CHECK_INTERVAL=60                        # Check every minute
+IDLE_TIMEOUT=300                       # 5 minutes (in seconds)
+WORLD_PORT_1=8085                       # First world server port
+WORLD_PORT_2=3443                       # Second world server port
+AUTH_SERVICE="authserver.service"
+WORLD_SERVICE="worldserver.service"
+BIN_PATH="/home/azeroth/server/bin"
+AUTH_PID=""
+WORLD_PID=""
+
+# Function to log messages
+log_message() {
+    logger -t azeroth-monitor "$1"
+    echo "$(date '+%Y-%m-%d %H:%M:%S'): $1"
+}
+
+# Function to check if servers are running
+is_server_running() {
+    local service=$1
+    systemctl is-active --quiet $service
+    return $?
+}
+
+# Function to check if process is frozen
+is_process_frozen() {
+    local pid=$1
+    if [ -n "$pid" ]; then
+        frozen_tasks=$(ps -o state= -p $pid 2>/dev/null | grep "T")
+        [ ! -z "$frozen_tasks" ]
+        return $?
+    fi
+    return 1
+}
+
+# Function to update PIDs
+update_pids() {
+    AUTH_PID=$(pgrep -f "${BIN_PATH}/authserver")
+    WORLD_PID=$(pgrep -f "${BIN_PATH}/worldserver")
+    log_message "Auth server PID: $AUTH_PID, World server PID: $WORLD_PID"
+}
+
+# Function to check for active world server connections
+has_world_connections() {
+    # Count only ESTABLISHED connections
+    local conn_1=$(ss -Htn state established "sport = :${WORLD_PORT_1}" | wc -l)
+    local conn_2=$(ss -Htn state established "sport = :${WORLD_PORT_2}" | wc -l)
+    local total=$((conn_1 + conn_2))
+    
+    log_message "Active world connections: $total (Port $WORLD_PORT_1: $conn_1, Port $WORLD_PORT_2: $conn_2)"
+    [ $total -gt 0 ]
+}
+
+# Function to freeze both servers
+freeze_servers() {
+    update_pids
+    
+    # Freeze auth server if running and not frozen
+    if [ -n "$AUTH_PID" ]; then
+        if ! is_process_frozen "$AUTH_PID"; then
+            log_message "Freezing Auth server..."
+            # Freeze child processes first
+            for child in $(pgrep -P $AUTH_PID); do
+                log_message "Freezing auth child process: $child"
+                kill -STOP $child
+            done
+            kill -STOP $AUTH_PID
+            log_message "Auth server frozen"
+        else
+            log_message "Auth server is already frozen"
+        fi
+    fi
+    
+    # Freeze world server if running and not frozen
+    if [ -n "$WORLD_PID" ]; then
+        if ! is_process_frozen "$WORLD_PID"; then
+            log_message "Freezing World server..."
+            # Freeze child processes first
+            for child in $(pgrep -P $WORLD_PID); do
+                log_message "Freezing world child process: $child"
+                kill -STOP $child
+            done
+            kill -STOP $WORLD_PID
+            log_message "World server frozen"
+        else
+            log_message "World server is already frozen"
+        fi
+    fi
+}
+
+# Initialize
+log_message "Monitor script starting"
+echo $(date +%s) > /tmp/azeroth_last_activity
+log_message "Initial setup complete"
+
+# Main loop
+while true; do
+    log_message "Starting check iteration..."
+    update_pids
+    if has_world_connections; then
+        # Update last activity time if there are connections
+        echo $(date +%s) > /tmp/azeroth_last_activity
+        log_message "Activity detected - updating last activity time"
+    else
+        # Calculate idle time
+        last_activity=$(cat /tmp/azeroth_last_activity)
+        current_time=$(date +%s)
+        idle_time=$((current_time - last_activity))
+        log_message "No activity - idle for $idle_time seconds"
+        
+        if [ $idle_time -ge $IDLE_TIMEOUT ]; then
+            log_message "Servers idle for ${idle_time} seconds. Freezing..."
+            freeze_servers
+        fi
+    fi
+    
+    sleep $CHECK_INTERVAL
+done

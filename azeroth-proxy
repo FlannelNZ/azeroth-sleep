@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Configuration
+LISTEN_PORT=3724
+TARGET_PORT=3725
+TARGET_IP="192.168.0.137"
+SCRIPT_PATH="/home/azeroth/azeroth-local"
+
+# Function to log messages
+log_message() {
+    logger -t azeroth-proxy "$1"
+    echo "$(date '+%Y-%m-%d %H:%M:%S'): $1"
+}
+
+log_message "Starting proxy on port $LISTEN_PORT -> $TARGET_PORT"
+
+# Start the proxy with the handler script
+exec socat -v -v TCP4-LISTEN:${LISTEN_PORT},fork,reuseaddr \
+    SYSTEM:"bash -c '${SCRIPT_PATH}/azeroth-thaw >&2; exec socat -v -v STDIO TCP4:${TARGET_IP}:${TARGET_PORT}'"
+

@@ -1,0 +1,16 @@
+[Unit]
+Description=AzerothCore Worldserver
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=azeroth
+WorkingDirectory=/home/azeroth/azerothcore
+ExecStart=/home/azeroth/server/bin/worldserver
+ExecStartPost=/usr/bin/sleep 1
+
+[Install]
+WantedBy=multi-user.target

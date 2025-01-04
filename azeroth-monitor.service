@@ -1,0 +1,16 @@
+[Unit]
+Description=AzerothCore Server Activity Monitor
+After=network.target authserver.service
+Requires=authserver.service
+
+[Service]
+Type=simple
+ExecStart=/home/azeroth/azeroth-local/azeroth-monitor
+Restart=always
+RestartSec=10
+User=azeroth
+Group=azeroth
+
+
+[Install]
+WantedBy=multi-user.target
