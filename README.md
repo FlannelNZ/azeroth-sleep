@@ -21,6 +21,8 @@ If you do have deploy this, let me know how you get on.
 
 I have one issue to resolve - I have the playerbots mod installed and it seems that, sometimes, when the server thaws, there are no playerbots active. That's probably just a config setting but need to chase that down.
 ## Prerequisites
+All installation is on the azerothcore server itself.
+
 I have tested it with worldserver and authserver running under systemd, although it should work regardless - although this solution is under systemd, it assumes nothing about the two core services. If you do want to get them under systemd, I have included worldserver.service and authserver.service which are the ones I use (you would just need to adjust the paths)
 
 ```
