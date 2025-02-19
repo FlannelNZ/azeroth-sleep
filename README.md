@@ -1,7 +1,7 @@
 # azeroth-sleep
 
 ## Strapline
-Freezes an azerothcore installation when no players are connected and instantly thaws it when a player tries to connect. Reduces resources consumption to negligible levels.
+Freezes an azerothcore installation when no players are connected and instantly thaws it when a player tries to connect. Reduces cpu consumption to negligible levels.
 
 ## Background
 I installed azerothcore on an LXC in Proxmox - 6 vcores, 8GB ram. Was surprised to find that, when no-one is connected, CPU is at 37% (ie over 2 core for doing nothing). The authserver consumes 1 vcore and the worldserver 1.2 vcores (esp the authserver - what is it doing?) Seems rather unnecessary and don't really want the server to have to be manually started and stopped when anyone wants to play. All it really has to do is have a lightweight proxy listening for a connection and then start things up.
