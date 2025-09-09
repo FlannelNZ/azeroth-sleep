@@ -1,5 +1,7 @@
 # azeroth-sleep
 
+## Based entirely off andymarden's one. changed azeroth-thaw to work for me with ac-dashboard-core
+
 ## Strapline
 Freezes an azerothcore installation when no players are connected and instantly thaws it when a player tries to connect. Reduces cpu consumption to negligible levels.
 
@@ -31,7 +33,7 @@ sudo apt install net-tools socat
 ## Installation and Configuration
 To get started, clone the repo - I put the scripts under /home/azeroth/azeroth-local.
 
-You will need to modify something variables and oaths in the scripts since I haven't spent too much time with parameterising or env files (yet?). They should be self-explanatory:
+You will need to modify something variables and paths in the scripts since I haven't spent too much time with parameterising or env files (yet?). They should be self-explanatory:
 - **azeroth-monitor**: the first 7 variables - how to identify everything in your installation, how often you want to check and how long you want to leave the servers idle before freezing
 - **azeroth-proxy**: the first 4 variables - ports, ip address and script path
 - **azeroth-thaw**:  just 1 - the path of the azerothcore 2  binaries
