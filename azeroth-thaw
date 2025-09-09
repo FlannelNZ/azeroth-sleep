@@ -3,8 +3,8 @@
 BIN_PATH="/home/azeroth/server/bin"
 
 # Get PIDs
-auth_pid=$(pgrep -f "${BIN_PATH}/authserver")
-world_pid=$(pgrep -f "${BIN_PATH}/worldserver")
+auth_pid=$(pidof "authserver")
+world_pid=$(pidof "worldserver")
     
 # Thaw auth server if frozen
 if [ -n "$auth_pid" ] && ps -o state= -p "$auth_pid" | grep -q "T"; then
